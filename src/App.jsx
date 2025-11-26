@@ -394,14 +394,14 @@ export default function App() {
           {displayTab === 'gear' && (
             <section className="section-container">
               <h2 className="section-title">Gear</h2>
-              <p>cкиньте фоточки своих инструментов и я поставлю</p>
+              <p>work in progress :P</p>
             </section>
           )}
 
           {displayTab === 'about' && (
             <section className="section-container">
               <h2 className="section-title">About Us</h2>
-              <p>text</p>
+              <p>lol, lmao even</p>
               <div className="members-grid">
                 <div className="top-row">
                   <div className="member-card benji-text"></div>
@@ -419,7 +419,7 @@ export default function App() {
 
       <footer className="main-footer">
         <div className="footer-left">
-          <p><IconMail size={16} /> 4len_coc@l.com</p>
+          <p><IconMail size={16} /> address@mail.com</p>
         </div>
         <div className="social-links">
           <a href="https://www.instagram.com/panicdrivenband/" className="social-handle" target="_blank" rel="noopener noreferrer">@panicdrivenband</a>
