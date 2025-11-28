@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-
-// --- Inline SVG Icons ---
+// --- Icons ---
 const IconMail = ({ size = 24, color = "currentColor" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect width="20" height="16" x="2" y="4" rx="2" />
@@ -9,6 +8,95 @@ const IconMail = ({ size = 24, color = "currentColor" }) => (
   </svg>
 );
 
+// --- Logo Letter Config ---
+const LOGO_LETTERS = [
+  { src: '/logo-d.png', alt: 'D', height: '15%', delay: '0.2s', className: 'logo-d' },
+  { src: '/logo-r.png', alt: 'R', height: '16%', delay: '0.1s', className: 'logo-r' },
+  { src: '/logo-i.png', alt: 'I', height: '16%', delay: '0.12s', className: 'logo-i' },
+  { src: '/logo-v.png', alt: 'V', height: '16.5%', delay: '0.2s', className: 'logo-v' },
+  { src: '/logo-e.png', alt: 'E', height: '15%', delay: '0.1s', className: 'logo-e' },
+  { src: '/logo-n.png', alt: 'N', height: '18%', delay: '0.1s', className: 'logo-n' },
+];
+
+// --- Nav Items ---
+const NAV_ITEMS = [
+  { id: 'home', label: 'Panic Driven' },
+  { id: 'gear', label: 'Gear' },
+  { id: 'about', label: 'About Us' },
+];
+
+// --- Components ---
+const Header = ({ activeTab, onTabChange }) => (
+  <header className="main-header">
+    <nav className="nav-tabs">
+      {NAV_ITEMS.map(({ id, label }) => (
+        <button
+          key={id}
+          className={`nav-btn ${activeTab === id ? 'active' : ''}`}
+          onClick={() => onTabChange(id)}
+        >
+          {label}
+        </button>
+      ))}
+    </nav>
+  </header>
+);
+
+const Footer = () => (
+  <footer className="main-footer">
+    <div className="footer-left">
+      <p><IconMail size={16} /> address@mail.com</p>
+    </div>
+    <div className="social-links">
+      <a 
+        href="https://www.instagram.com/panicdrivenband/" 
+        className="social-handle" 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+        @panicdrivenband
+      </a>
+    </div>
+  </footer>
+);
+
+const HomePage = () => (
+  <section className="home-section">
+    <div className="logo-container">
+      <img 
+        src="/logo.png" 
+        alt="Panic Driven Base" 
+        className="logo-base" 
+      />
+      {LOGO_LETTERS.map(({ src, alt, className }) => (
+        <img 
+          key={alt}
+          src={src} 
+          alt={alt} 
+          className={`logo-letter ${className}`}
+        />
+      ))}
+    </div>
+  </section>
+);
+
+const GearPage = () => (
+  <section className="section-container">
+    <h2 className="section-title">Gear</h2>
+    <p>work in progress :P</p>
+  </section>
+);
+
+const AboutPage = () => (
+  <section className="about-section">
+    <div className="about-content">
+      <h2 className="section-title">About Us</h2>
+      <p>lol, lmao even</p>
+    </div>
+  </section>
+);
+
+// --- Main App ---
 export default function App() {
   const [activeTab, setActiveTab] = useState("home");
   const [displayTab, setDisplayTab] = useState("home"); 
@@ -17,28 +105,36 @@ export default function App() {
   const handleTabChange = (newTab) => {
     if (newTab === activeTab) return;
 
-    setActiveTab(newTab);         // Set the target immediately
+    setActiveTab(newTab);
     setTransitionClass("fade-out");
 
     setTimeout(() => {
-      setDisplayTab(newTab);      // Swap page AFTER fade-out finishes
+      setDisplayTab(newTab);
       setTransitionClass("fade-in");
-
-      setTimeout(() => {
-        setTransitionClass("");   // Cleanup
-      }, 300);
+      setTimeout(() => setTransitionClass(""), 300);
     }, 300);
   };
 
+  const renderPage = () => {
+    switch(displayTab) {
+      case 'home': return <HomePage />;
+      case 'gear': return <GearPage />;
+      case 'about': return <AboutPage />;
+      default: return <HomePage />;
+    }
+  };
 
   return (
     <div className="app-container">
       <style>{`
-        /* Reset & Base */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #000; color: #fff; font-family: 'Helvetica Neue', sans-serif; overflow-x: hidden; }
+        body { 
+          background-color: #000; 
+          color: #fff; 
+          font-family: 'Helvetica Neue', Arial, sans-serif; 
+          overflow-x: hidden; 
+        }
 
-        /* Layout */
         .app-container {
           display: flex;
           flex-direction: column;
@@ -46,12 +142,12 @@ export default function App() {
           position: relative;
         }
 
-        /* Header (Right Aligned) */
+        /* Header */
         .main-header {
           position: fixed;
           top: 0;
           right: 0;
-          padding: 2rem 3rem;
+          padding: 1.5rem 3rem 3rem 2rem;
           z-index: 10000;
           background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
           width: 100%;
@@ -61,20 +157,27 @@ export default function App() {
 
         .nav-tabs {
           display: flex;
-          gap: 2.5rem;
+          gap: 2rem;
         }
 
         .nav-btn {
           background: transparent;
           border: none;
           color: rgba(255, 255, 255, 0.6);
-          font-size: 0.9rem;
+          font-size: 0.7rem;
           text-transform: uppercase;
           letter-spacing: 4px;
           font-weight: 600;
           cursor: pointer;
           position: relative;
           padding-bottom: 5px;
+          transition: color 0.2s;
+          -webkit-tap-highlight-color: transparent;
+          outline: none;
+        }
+        
+        .nav-btn:focus {
+          outline: none;
         }
 
         .nav-btn:hover, .nav-btn.active {
@@ -92,7 +195,7 @@ export default function App() {
           box-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
-        /* Main Content */
+        /* Content Area */
         .content-area {
           flex: 1;
           display: flex;
@@ -103,11 +206,20 @@ export default function App() {
           overflow: hidden;
         }
 
-        /* Page transition effect */
+        /* Transitions */
+        .transition-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 9999;
+        }
+
         .page-transition {
           opacity: 1;
           transition: opacity 0.3s ease-in-out;
-          pointer-events: none;
         }
 
         .page-transition.fade-out {
@@ -124,14 +236,11 @@ export default function App() {
           to { opacity: 1; }
         }
 
-        .transition-overlay {
-          position: fixed;
-          opacity: 1;
-          top: 0; left: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 9999;
+        @keyframes blurIn {
+          to {
+            filter: blur(0);
+            opacity: 1;
+          }
         }
 
         /* Home Section */
@@ -146,21 +255,20 @@ export default function App() {
           background: radial-gradient(circle, #1a1a1a 0%, #000000 90%); 
         }
 
-        /* Logo Setup */
         .logo-container {
           position: fixed;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 100vw;
+          height: 60%;
           max-width: 1400px;
           aspect-ratio: 16 / 9;
           z-index: 50;
           display: flex;
-          align-items: flex-end; /* Bottom alignment */
-          justify-content: center; /* Horizontal center */
-          gap: 0.5%; /* Space between letters */
-          padding-bottom: 2%; /* Adjust to position text line */
+          align-items: flex-end;
+          justify-content: center;
+          gap: 0.5%;
+          padding-bottom: 2%;
         }
 
         .logo-base {
@@ -172,74 +280,53 @@ export default function App() {
           opacity: 0.05;
           object-fit: contain;
           z-index: 1;
-          
-          /* Blur in animation */
           filter: blur(20px);
           animation: blurIn 1s ease-out forwards;
-          animation-delay: 0s; /* Starts immediately, or adjust timing */
-        }
-
-        @keyframes blurIn {
-          to {
-            filter: blur(0);
-            opacity: 1;
-          }
         }
 
         .logo-letter {
           width: auto;
-          margin-bottom: 12%;
+          max-width: clamp(180px, 40vw, 420px);
+          max-height: clamp(120px, 25vh, 300px);
+
+          bottom: 22%;
           object-fit: contain;
           z-index: 2;
           position: relative;
-          
-          /* Initial state - blurred and invisible */
+
           filter: blur(20px);
           opacity: 0;
-          
-          /* Animation */
           animation: blurIn 1s ease-out forwards;
         }
+          
+        @media (max-aspect-ratio: 1/2) {
+          .logo-letter {
+            max-width: 70vw;
+            max-height: 6vh;
+            bottom: 34%;
+          }
+        }
 
-        /* Stagger each letter's start time */
-        .logo-d { 
-          height: 15%; 
-          animation-delay: 0.2s;
-        }
-        .logo-r { 
-          height: 16%; 
-          animation-delay: 0.1s;
-        }
-        .logo-i { 
-          height: 16%; 
-          animation-delay: 0.12s;
-        }
-        .logo-v { 
-          height: 16.5%; 
-          animation-delay: 0.2s;
-        }
-        .logo-e { 
-          height: 15%; 
-          animation-delay: 0.1s;
-        }
-        .logo-n { 
-          height: 18%; 
-          animation-delay: 0.1s;
-        }
+        ${LOGO_LETTERS.map(({ className, height, delay }) => `
+          .${className} { 
+            height: ${height}; 
+            animation-delay: ${delay};
+          }
+        `).join('\n')}
 
         /* Section Containers */
         .section-container {
-          position: fixed;        /* instead of relative */
+          position: fixed;
           top: 50%;
           left: 50%;
-          transform: translate(-50%, -50%);  /* perfect centering */
+          transform: translate(-50%, -50%);
           width: 100%;
           height: 100vh;
-          z-index: 1;           /* sits on top of everything else */
+          z-index: 1;
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center; /* vertically center the content */
+          justify-content: center;
           pointer-events: none;
         }
 
@@ -251,59 +338,63 @@ export default function App() {
           text-align: center;
         }
 
-        /* Members Grid */
-        .members-grid {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
+        /* About Section */
+        .about-section {
+          width: 100%;
           height: 100vh;
-        }
-
-        .top-row {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 50%;
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0;
-        }
-
-        .bottom-member {
-          position: absolute;
-          object-fit: cover;
-        }
-
-        .bottom-member.herman {
-          width: 50%;
-          // height: 50%;
-          left: -2vw;
-          bottom: 0;
-        }
-
-        .bottom-member.feder {
-          max-height: 40vh;
-          right: 5vw;
-          bottom: 0;
-        }
-
-        .member-card {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          border: none;
-        }
-
-        .benji-text {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 2rem;
-          font-weight: 600;
-          letter-spacing: 2px;
-          color: black;
+          position: relative;
+          overflow: hidden;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        /* Desktop/wide screens */
+        .about-section {
+          background-image: url('/about-desktop.png');
+        }
+
+
+        @media (max-width: 1280px){
+          .about-section {
+            background-image: url('/about-desktop-squareish.png');
+          }
+        }
+
+
+        @media (max-width: 1024px){
+          .about-section {
+            background-image: url('/about-tablet.png');
+          }
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+          .about-section {
+            background-image: url('/about-mobile.png');
+          }
+        }
+
+        @media (max-width: 450px) {
+          .about-section {
+            background-image: url('/about-mobile-narrow.png');
+          }
+        }
+
+        /* Ultra-wide screens */
+        @media (min-aspect-ratio: 16/9) {
+          .about-section {
+            background-image: url('/about-ultrawide.png');
+          }
+        }
+
+        .about-content {
+          position: relative;
+          z-index: 10;
+          text-align: center;
         }
 
         /* Footer */
@@ -334,97 +425,66 @@ export default function App() {
           font-size: 0.9rem;
           letter-spacing: 1px;
           font-weight: 500;
+          transition: color 0.2s;
         }
 
         .social-handle:hover {
           color: #fff;
         }
 
+        /* Mobile Responsive */
         @media (max-width: 768px) {
           .main-header {
             padding: 1rem;
             justify-content: center;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
           }
-          .nav-tabs { gap: 1.5rem; }
+          
+          .nav-tabs { 
+            gap: 0.8rem;
+          }
+          
+          .nav-btn {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            white-space: nowrap;
+          }
+          
+          .section-title {
+            font-size: 2rem;
+          }
+          
           .main-footer {
-            flex-direction: column;
+            flex-direction: row;
             gap: 1rem;
             padding: 1rem;
-            position: relative; 
-            background: #000;
           }
-          .members-grid {
-            gap: 0;
+          
+          .footer-left p {
+            font-size: 0.7rem;
+          }
+          
+          .social-handle {
+            font-size: 0.75rem;
+          }
+          
+          .logo-container {
+            max-width: 95vw;
           }
         }
       `}</style>
 
-      {/* Header */}
-      <header className="main-header">
-        <nav className="nav-tabs">
-          <button className={`nav-btn ${activeTab === 'home' ? 'active' : ''}`} onClick={() => handleTabChange('home')}>Panic Driven</button>
-          <button className={`nav-btn ${activeTab === 'gear' ? 'active' : ''}`} onClick={() => handleTabChange('gear')}>Gear</button>
-          <button className={`nav-btn ${activeTab === 'about' ? 'active' : ''}`} onClick={() => handleTabChange('about')}>About Us</button>
-        </nav>
-      </header>
-
+      <Header activeTab={activeTab} onTabChange={handleTabChange} />
+      
       <main className="content-area">
         <div className="transition-overlay">
           <div className={`page-transition ${transitionClass}`}>
-            {displayTab === 'home' && (
-            <section className="home-section">
-              <div className="logo-container">
-                <img 
-                  src="/logo.png" 
-                  alt="Panic Driven Base" 
-                  className="logo-base" 
-                />
-                
-                <img src="/logo-d.png" alt="D" className="logo-letter logo-d"/>
-                <img src="/logo-r.png" alt="R" className="logo-letter logo-r"/>
-                <img src="/logo-i.png" alt="I" className="logo-letter logo-i"/>
-                <img src="/logo-v.png" alt="V" className="logo-letter logo-v"/>
-                <img src="/logo-e.png" alt="E" className="logo-letter logo-e"/>
-                <img src="/logo-n.png" alt="N" className="logo-letter logo-n"/>
-              </div>
-            </section>
-          )}
-
-          {displayTab === 'gear' && (
-            <section className="section-container">
-              <h2 className="section-title">Gear</h2>
-              <p>work in progress :P</p>
-            </section>
-          )}
-
-          {displayTab === 'about' && (
-            <section className="section-container">
-              <h2 className="section-title">About Us</h2>
-              <p>lol, lmao even</p>
-              <div className="members-grid">
-                <div className="top-row">
-                  <div className="member-card benji-text"></div>
-                  <img src="/dima.png" alt="Dima" className="member-card"/>
-                </div>
-                <img src="/herman.png" alt="Herman" className="bottom-member herman"/>
-                <img src="/feder.png" alt="Feder" className="bottom-member feder"/>
-              </div>
-            </section>
-          )}
+            {renderPage()}
           </div>
         </div>
-        
       </main>
 
-      <footer className="main-footer">
-        <div className="footer-left">
-          <p><IconMail size={16} /> address@mail.com</p>
-        </div>
-        <div className="social-links">
-          <a href="https://www.instagram.com/panicdrivenband/" className="social-handle" target="_blank" rel="noopener noreferrer">@panicdrivenband</a>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
