@@ -128,18 +128,26 @@ export default function App() {
     <div className="app-container">
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { 
+        html, body { 
           background-color: #000; 
           color: #fff; 
           font-family: 'Helvetica Neue', Arial, sans-serif; 
-          overflow-x: hidden; 
+          overflow: hidden;
+          height: 100%;
+          width: 100%;
+          position: fixed;
         }
 
         .app-container {
           display: flex;
           flex-direction: column;
           min-height: 100vh;
-          position: relative;
+          height: 100vh;
+          width: 100vw;
+          position: fixed;
+          top: 0;
+          left: 0;
+          overflow: hidden;
         }
 
         /* Header */
@@ -384,6 +392,12 @@ export default function App() {
           }
         }
 
+        @media (max-width: 450px) and (max-height: 690px) {
+          .about-section {
+            background-image: url('/about-mobile-narrow-small.png');
+          }
+        }
+
         /* Ultra-wide screens */
         @media (min-aspect-ratio: 16/9) {
           .about-section {
@@ -437,7 +451,6 @@ export default function App() {
           .main-header {
             padding: 1rem;
             justify-content: center;
-            background: rgba(0,0,0,0.9);
           }
           
           .nav-tabs { 
